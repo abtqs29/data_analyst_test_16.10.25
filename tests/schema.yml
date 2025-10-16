@@ -16,3 +16,13 @@ models:
         tests: [not_null, unique]
       - name: order_date_kyiv_ts
         tests: [not_null]
+
+  - name: total_amount
+    tests:
+    - not_null
+    - dbt_utils.expression_is_true:
+        expression: ">= 0"
+  - name: has_refund
+    tests:
+    - accepted_values:
+        values: [true, false]
