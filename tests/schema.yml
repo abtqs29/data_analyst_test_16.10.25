@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: stg_sales
+    columns:
+      - name: reference_id
+        tests: [not_null]
+      - name: country
+        tests: [not_null]
+      - name: product_name
+        tests: [not_null]
+
+  - name: fct_sales
+    columns:
+      - name: reference_id
+        tests: [not_null, unique]
+      - name: order_date_kyiv_ts
+        tests: [not_null]

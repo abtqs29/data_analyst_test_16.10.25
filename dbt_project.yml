@@ -1,0 +1,25 @@
+name: 'gyb_test_project'
+version: '1.0.0'
+config-version: 2
+
+profile: 'gyb_test_project'
+
+model-paths: ['models']
+analysis-paths: ['analyses']
+test-paths: ['tests']
+seed-paths: ['seeds']
+target-path: 'target'
+clean-targets: ['target', 'dbt_packages']
+
+models:
+  gyb_test_project:
+    +materialized: view
+    staging:
+      +schema: staging
+    marts:
+      +schema: marts
+
+seeds:
+  gyb_test_project:
+    +schema: staging
+    +quote_columns: true
