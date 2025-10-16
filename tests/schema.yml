@@ -17,12 +17,40 @@ models:
       - name: order_date_kyiv_ts
         tests: [not_null]
 
-  - name: total_amount
-    tests:
-    - not_null
-    - dbt_utils.expression_is_true:
-        expression: ">= 0"
-  - name: has_refund
-    tests:
-    - accepted_values:
-        values: [true, false]
+      # гроші ≥ 0
+      - name: total_amount
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: returned_amount
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: total_rebill_amount
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+
+      # нетто-дохід = total + rebill - returned 
+      - name: total_revenue
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "= coalesce(total_amount,0) + coalesce(total_rebill_amount,0) - coalesce(returned_amount,0)"
+
+      # бульові поля
+      - name: has_refund
+        tests:
+          - accepted_values:
+              values: [true, false]
+      - name: has_chargeback
+        tests:
+          - accepted_values:
+              values: [true, false]
+
+      # різниця днів
+      - name: refund_delay_days
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+              where: "refund_delay_days is not null"
